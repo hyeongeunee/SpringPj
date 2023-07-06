@@ -19,4 +19,9 @@ public class HomeController {
     public String test(){
         return "test";
     }
+
+    @RequestMapping("/ttt")
+    public String ttt(){
+        return "ttt";
+    }
 }
