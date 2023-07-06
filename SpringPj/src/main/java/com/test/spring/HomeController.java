@@ -24,4 +24,9 @@ public class HomeController {
     public String ttt(){
         return "ttt";
     }
+
+    @RequestMapping("/footer")
+    public String footer(){
+        return "footer";
+    }
 }
