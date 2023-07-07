@@ -6,25 +6,31 @@
 <link rel="stylesheet" href="../../resources/css/nav.css">
 <link rel="stylesheet" href="../../resources/css/map.css">
 <link rel="stylesheet" href="../../resources/css/footer.css">
+<link rel="stylesheet" href="../../resources/css/btn.css">
 <style>
-    #canvas {
-        border: 2px dashed #92AAB0;
-        width: 850px;
-        height: 60px;
-        color: #92AAB0;
-        padding: 10px 10px 10px 10px;
-        font-size: 200%;
-        display: table-cell;
-        position: relative;
-        top: 30%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        margin-top: -130px;
-        margin-bottom: 20px;
-    }
+    /*#canvas {*/
+    /*    border: 2px dashed #92AAB0;*/
+    /*    width: 850px;*/
+    /*    height: 60px;*/
+    /*    color: #92AAB0;*/
+    /*    padding: 10px 10px 10px 10px;*/
+    /*    font-size: 200%;*/
+    /*    display: table-cell;*/
+    /*    position: relative;*/
+    /*    top: 30%;*/
+    /*    left: 50%;*/
+    /*    transform: translate(-50%, -50%);*/
+    /*    margin-top: -130px;*/
+    /*    margin-bottom: 20px;*/
+    /*}*/
 
     .container {
+        margin: auto;
         text-align: center;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
     }
 
     #title {
@@ -38,11 +44,17 @@
         <img src="/resources/img/4201300e10ad1522685f4967655da1c0.gif" alt="logo">
     </div>
 
-    <div id="ranArea">
-        <div class="canvas-container">
-            <canvas id="canvas"></canvas>
-        </div>
+    <input class="c-checkbox" type="checkbox" id="checkbox">
+    <div class="c-formContainer">
+        <form class="c-form" action="">
+            <input class="c-form__input" placeholder="Keyword" type="search" style="text-align: center">
+            <label class="c-form__buttonLabel" for="checkbox">
+                <button class="c-form__button" type="button">Submit</button>
+            </label>
+            <label class="c-form__toggle" for="checkbox" data-title="Search"></label>
+        </form>
     </div>
+
     <div class="map_container">
         <div class="map_wrap">
             <div id="map" style="width:900px;height:500px;position:relative;overflow:hidden;text-align: center"></div>

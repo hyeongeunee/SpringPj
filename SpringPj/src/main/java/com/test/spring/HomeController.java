@@ -29,4 +29,9 @@ public class HomeController {
     public String footer(){
         return "footer";
     }
+
+    @RequestMapping("/btn")
+    public String btn(){
+        return "btn";
+    }
 }
