@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cafe">
+
+    <sql id="searchCondition">
+        <choose>
+            <when test="title != null and content != null">
+                WHERE TITLE LIKE '%'||#{title}||'%' OR CONTENT LIKE '%'||#{content}||'%'
+            </when>
+            <when test="title != null">
+                WHERE TITLE LIKE '%'||#{title}||'%'
+            </when>
+            <when test="writer != null">
+                WHERE WRITER LIKE '%'||#{writer}||'%'
+            </when>
+        </choose>
+    </sql>
+
+    <!-- xml 에서는 <> 기호에 민감하기 때문에 CDATA 블럭을 사용해야 한다. -->
+    <select id="getList" parameterType="cafeDto" resultType="cafeDto">
+        SELECT *
+        FROM
+        (SELECT result1.*, ROWNUM AS rnum
+        FROM
+        (SELECT NUM, WRITER, TITLE, CONTENT, VIEWCOUNT, REGDATE
+        FROM BOARD_CAFE
+        <include refid="searchCondition"/>
+        ORDER BY num DESC) result1)
+        <![CDATA[
+      WHERE rnum >= #{startRowNum} AND rnum <= #{endRowNum}
+      ]]>
+    </select>
+
+    <select id="getCount" parameterType="cafeDto" resultType="int">
+        SELECT NVL(MAX(ROWNUM), 0)
+        FROM BOARD_CAFE
+        <include refid="searchCondition"/>
+    </select>
+
+    <insert id="insert" parameterType="cafeDto">
+        INSERT INTO BOARD_CAFE
+            (NUM, WRITER, TITLE, CONTENT, VIEWCOUNT, REGDATE)
+        VALUES (BOARD_CAFE_SEQ.NEXTVAL, #{writer}, #{title},
+                #{content}, #{viewCount}, SYSDATE)
+    </insert>
+
+    <select id="getData" parameterType="int" resultType="cafeDto">
+        SELECT result1.*
+        FROM (SELECT NUM,
+                     WRITER,
+                     TITLE,
+                     CONTENT,
+                     VIEWCOUNT,
+                     TO_CHAR(REGDATE, 'YY.MM.DD HH24:MI') AS  regdate,
+                     LAG(NUM, 1, 0) OVER (ORDER BY NUM DESC)  nextNum,
+                     LEAD(NUM, 1, 0) OVER (ORDER BY NUM DESC) prevNum
+              FROM BOARD_CAFE) result1
+        WHERE NUM = #{num}
+    </select>
+
+    <!-- 검색 기능 있는 것-->
+    <select id="getData2" parameterType="cafeDto" resultType="cafeDto">
+        SELECT result1.*
+        FROM
+        (SELECT NUM, WRITER, TITLE, CONTENT, VIEWCOUNT, TO_CHAR(REGDATE, 'YY.MM.DD HH24:MI') AS regdate,
+        LAG(NUM, 1, 0) OVER (ORDER BY NUM DESC) nextNum,
+        LEAD(NUM, 1, 0) OVER (ORDER BY NUM DESC) prevNum
+        FROM board_cafe
+        <include refid="searchCondition"/>
+        ) result1
+        WHERE NUM=#{num}
+    </select>
+
+    <update id="addViewCount" parameterType="int">
+        UPDATE board_cafe
+        SET viewCount=viewCount + 1
+        WHERE num = #{num}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE
+        FROM board_cafe
+        WHERE num = #{num}
+    </delete>
+
+    <update id="update" parameterType="cafeDto">
+        UPDATE board_cafe
+        SET title=#{title},
+            content=#{content}
+        WHERE num = #{num}
+    </update>
+</mapper>
